@@ -1,0 +1,123 @@
+<div class="container">
+  <div class="p-card">
+    <!-- Custom Step Header -->
+    <div class="custom-steps">
+      <div class="step-header-box" [class.active]="activeIndex() === 0">
+        Step 1: Info & Feedback
+      </div>
+      <div class="step-header-box" [class.active]="activeIndex() === 1">
+        Step 2: Review
+      </div>
+    </div>
+
+    <div class="p-card-body">
+      <form [formGroup]="form" (ngSubmit)="submitForm()">
+        <!-- Step 1: Personal Info + Feedback -->
+        <div *ngIf="activeIndex() === 0" class="step-content">
+          <div formGroupName="personalInfo">
+            <div class="p-field">
+              <label for="firstName">First Name</label>
+              <input pInputText id="firstName" formControlName="firstName"
+                     [class.p-invalid]="form.get('personalInfo.firstName')?.invalid && form.get('personalInfo.firstName')?.touched" />
+              <small *ngIf="form.get('personalInfo.firstName')?.invalid && form.get('personalInfo.firstName')?.touched" 
+                     class="p-error">Field is required</small>
+            </div>
+
+            <div class="p-field">
+              <label for="lastName">Last Name</label>
+              <input pInputText id="lastName" formControlName="lastName"
+                     [class.p-invalid]="form.get('personalInfo.lastName')?.invalid && form.get('personalInfo.lastName')?.touched" />
+              <small *ngIf="form.get('personalInfo.lastName')?.invalid && form.get('personalInfo.lastName')?.touched" 
+                     class="p-error">Field is required</small>
+            </div>
+
+            <div class="p-field">
+              <label for="email">Email</label>
+              <input pInputText id="email" type="email" formControlName="email"
+                     [class.p-invalid]="form.get('personalInfo.email')?.invalid && form.get('personalInfo.email')?.touched" />
+              <small *ngIf="form.get('personalInfo.email')?.hasError('required') && form.get('personalInfo.email')?.touched" 
+                     class="p-error">Field is required</small>
+              <small *ngIf="form.get('personalInfo.email')?.hasError('email') && form.get('personalInfo.email')?.touched" 
+                     class="p-error">Check email format</small>
+            </div>
+          </div>
+
+          <div formGroupName="feedbackDetails">
+            <div class="p-field">
+              <label for="feedback">Your Feedback</label>
+              <textarea pInputTextarea id="feedback" formControlName="feedback" rows="5"
+                        [class.p-invalid]="form.get('feedbackDetails.feedback')?.invalid && form.get('feedbackDetails.feedback')?.touched"></textarea>
+              <small *ngIf="form.get('feedbackDetails.feedback')?.invalid && form.get('feedbackDetails.feedback')?.touched" 
+                     class="p-error">Feedback is required</small>
+            </div>
+
+            <div class="p-field">
+              <label>Rating</label>
+              <p-rating formControlName="rating" [cancel]="false" [stars]="5"
+                        [class.p-invalid]="form.get('feedbackDetails.rating')?.invalid && form.get('feedbackDetails.rating')?.touched"></p-rating>
+              <small *ngIf="form.get('feedbackDetails.rating')?.invalid && form.get('feedbackDetails.rating')?.touched" 
+                     class="p-error">Minimum 1 star required</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Final Step -->
+        <div *ngIf="activeIndex() === 1" class="step-content summary">
+          <h3>Review Your Feedback</h3>
+        
+          <div class="summary-row">
+            <span class="summary-label">First Name:</span>
+            <span class="summary-value">{{ form.get('personalInfo.firstName')?.value }}</span>
+          </div>
+
+          <div class="summary-row">
+            <span class="summary-label">Last Name:</span>
+            <span class="summary-value">{{ form.get('personalInfo.lastName')?.value }}</span>
+          </div>
+        
+          <div class="summary-row">
+            <span class="summary-label">Email:</span>
+            <span class="summary-value">{{ form.get('personalInfo.email')?.value }}</span>
+          </div>
+        
+          <div class="summary-row">
+            <span class="summary-label">Feedback:</span>
+            <span class="summary-value">{{ form.get('feedbackDetails.feedback')?.value }}</span>
+          </div>
+        
+          <div class="summary-row">
+            <span class="summary-label">Rating:</span>
+            <span class="summary-value">{{ form.get('feedbackDetails.rating')?.value }}/5</span>
+          </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="navigation-buttons">
+          <button pButton
+                  *ngIf="activeIndex() > 0"
+                  type="button"
+                  label="Back"
+                  (click)="prevStep()"
+                  class="teal-button"></button>
+
+          <button pButton
+                  *ngIf="activeIndex() < 1"
+                  type="button"
+                  label="Next"
+                  (click)="nextStep()"
+                  [disabled]="form.get('personalInfo')?.invalid || form.get('feedbackDetails')?.invalid"
+                  class="teal-button"></button>
+
+          <button pButton
+                  *ngIf="activeIndex() === 1"
+                  type="submit"
+                  class="teal-button"
+                  [label]="loading() ? '' : (isEditMode() ? 'Update' : 'Submit')"
+                  [disabled]="form.invalid || loading()">
+            <i *ngIf="loading()" class="pi pi-spin pi-spinner"></i>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

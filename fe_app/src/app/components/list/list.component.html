@@ -1,0 +1,92 @@
+<div class="dashboard-container">
+  <h4>List of Entries</h4>
+  <p-table 
+    [value]="feedbacks()" 
+    [loading]="loading()" 
+    dataKey="_id"
+    [expandedRowKeys]="expandedRows"
+    (onRowExpand)="onRowExpand($event)"
+    (onRowCollapse)="onRowCollapse($event)"
+  >
+    <!-- Header Template -->
+    <ng-template pTemplate="header">
+      <tr>
+        <th></th> <!-- Expand Icon Column -->
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>Email</th>
+        <th>Rating</th>
+        <th>Comments</th>
+        <th>Created Date</th>
+        <th>Updated Date</th>
+        <th>Update</th>
+        <th>Delete</th>
+      </tr>
+    </ng-template>
+
+    <!-- Loading Template -->
+    <ng-template pTemplate="loading">
+      <tr>
+        <td colspan="9" class="text-center">
+          <p-progressSpinner *ngIf="loading()"></p-progressSpinner>
+        </td>
+      </tr>
+    </ng-template>
+
+    <!-- Body Template -->
+    <ng-template pTemplate="body" let-feedback>
+      <tr>
+        <td>
+          <a href="#" (click)="toggleRow(feedback); $event.preventDefault()" [attr.aria-expanded]="isRowExpanded(feedback)">
+            <i 
+              class="pi" 
+              [ngClass]="{'pi-chevron-down': isRowExpanded(feedback), 'pi-chevron-right': !isRowExpanded(feedback)}"
+              style="cursor: pointer;"
+            ></i>
+          </a>
+        </td>
+        <td>{{ feedback.firstName }}</td>
+        <td>{{ feedback.lastName }}</td>
+        <td>{{ feedback.email }}</td>
+        <td>{{ feedback.rating }} <span class="star">★</span></td>
+        <td>{{ feedback.feedback }}</td>
+        <td>{{ feedback.createdAt | date:'medium' }}</td>
+        <td>{{ feedback.updatedAt | date:'medium' }}</td>
+        <td>
+          <i class="pi pi-pencil teal-icon" (click)="editFeedback(feedback._id)" style="cursor:pointer"></i>
+        </td>
+        <td>
+          <i class="pi pi-trash teal-icon" (click)="deleteFeedback(feedback._id)" style="cursor:pointer"></i>
+        </td>
+      </tr>
+    </ng-template>
+
+    <!-- Expanded Row Template: Show History -->
+    <ng-template #rowExpansionTemplate pTemplate="rowexpansion" let-feedback>
+      <tr>
+        <td colspan="9">
+          <h4>History</h4>
+          <p-table [value]="feedback.history" [paginator]="false" [rows]="5" *ngIf="feedback.history?.length > 0">
+            <ng-template pTemplate="header">
+              <tr>
+                <th>Feedback</th>
+                <th>Rating</th>
+                <th>Updated Date</th>
+              </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-historyItem>
+              <tr>
+                <td>{{ historyItem.feedback }}</td>
+                <td>{{ historyItem.rating }} <span class="star">★</span></td>
+                <td>{{ historyItem.updatedAt | date:'medium' }}</td>
+              </tr>
+            </ng-template>
+          </p-table>
+          <div *ngIf="!feedback.history || feedback.history.length === 0">
+            No history available.
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
