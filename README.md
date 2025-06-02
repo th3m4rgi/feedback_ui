@@ -1,6 +1,6 @@
 # feedback_app
 
-This is the Angular backend server application for the feedback app.
+This is the backend server application for the feedback app.
 
 ```
 MacBook-Pro feedback_app % node -v
