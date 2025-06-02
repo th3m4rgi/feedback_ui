@@ -1,6 +1,6 @@
-# feedback_app
+# feedback_ui
 
-This is the backend server application for the feedback app.
+This is the FE application for the feedback app.
 
 ```
 MacBook-Pro feedback_app % node -v
